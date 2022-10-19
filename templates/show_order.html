@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Service Name</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Date Created</th>
+    </tr>
+    </thead>
+    {% for order_detail in order_details %}
+    <tbody>
+    <tr class="table-success">
+        <th scope="row">{{ order_detail.service.name }}</th>
+        <td>{{ order_detail.quantity }}</td>
+        <td>{{ order_detail.date_created }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

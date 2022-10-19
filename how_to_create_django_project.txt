@@ -1,0 +1,27 @@
+CMD: cd path/to/python_projects
+
+--if not already present:
+CMD: python -m venv django_venv
+
+--on Mac:
+CMD: source django_venv/bin/activate
+
+--on windows:
+CMD: django_venv\Scripts\activate.bat
+
+--if not already present:
+CMD: pip install django
+
+CMD: django-admin startproject <project-name>
+
+CMD: deactivate
+
+--open created top directory of <project-name> with pycharm
+
+--setup new python virtual environment for pycharm interpreter
+
+--in pycharm terminal enter and run:
+
+CMD: pip install django
+
+--Done
