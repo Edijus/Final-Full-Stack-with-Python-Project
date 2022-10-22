@@ -22,6 +22,9 @@
             <a href="{% url 'application:delete_category' id=category.id %}">
                 <img src="{% static 'img/delete48.png' %}" alt="Delete" style="cursor: pointer;">
             </a>
+            <a href="{% url 'application:edit_category' id=category.id %}">
+                <img src="{% static 'img/edit48.png' %}" alt="Edit" style="cursor: pointer;">
+            </a>
         </td>
     </tr>
     {% endfor %}

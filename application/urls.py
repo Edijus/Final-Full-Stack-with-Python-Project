@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from .views import index, sign_up, user_account, show_categories, create_category, delete_category  # , show_order
+from .views import index, sign_up, user_account, show_categories, create_category, delete_category, edit_category
 
 
 app_name = 'application'  # namespace
@@ -16,5 +16,6 @@ urlpatterns = [
     path('create_category/', login_required(create_category), name='create_category'),
     # path('order<int:id>/', show_order, name='show_order'),
     path('delete_category/id<int:id>/', login_required(delete_category), name='delete_category'),
+    path('edit_category/id<int:id>/', login_required(edit_category), name='edit_category'),
     # path('delete_category/', login_required(delete_category), name='delete_category'),
 ]

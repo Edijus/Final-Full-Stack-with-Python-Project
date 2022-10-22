@@ -59,6 +59,22 @@ def delete_category(request, id):
     return redirect('application:show_categories', page=1)
 
 
+def edit_category(request, id):
+    category = Categories.objects.get(pk=id)
+
+    if request.method == 'POST':
+        request_data = request.POST.copy()
+        request_data['user'] = request.user.id
+        form = EditCategoriesForm(request_data)
+        if form.is_valid():
+            Categories.objects.filter(pk=id).update(name=request_data['name'])
+            return redirect('application:show_categories', page=1)
+    else:
+        form = EditCategoriesForm(instance=category)
+
+    return render(request, 'edit_category.html', {'form': category})
+
+
 def show_categories(request, page=1):
     categories_per_page = 10
     categories = Categories.objects.filter(user=request.user.id).order_by('name').all()
