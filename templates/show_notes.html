@@ -17,7 +17,7 @@
     {% for note in notes %}
     <tbody>
     <tr class="table-success">
-        <th scope="row">{{ note.name }}</th>
+        <th scope="row"><a href="{% url 'application:edit_note' id=note.id %}">{{ note.name }}</a></th>
         <td>{{ note.date_created }}</td>
         <td>
 

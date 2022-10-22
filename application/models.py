@@ -20,6 +20,7 @@ class Notes(models.Model):
     name = models.CharField(max_length=30)
     text = models.TextField()
     date_created = models.DateField(auto_now_add=True, null=False)
+    image = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return f'({self.name})'

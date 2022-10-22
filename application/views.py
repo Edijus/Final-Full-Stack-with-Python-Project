@@ -106,7 +106,8 @@ def create_note(request, category):
         form.category = category
         if form.is_valid():
             # form.save()
-            Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'], user=request_data['user'], category_id=category)
+            Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'], user=request_data['user'],
+                                        category_id=category, image=request.FILES['image'])
             notes = Notes.objects.filter(user=request.user.id).filter(category=category).order_by('name').all()
             category_obj = Categories.objects.get(pk=category)
             context = {
@@ -119,6 +120,24 @@ def create_note(request, category):
 
     form.category = category
     return render(request, 'create_note.html', context={'form': form})
+
+
+def edit_note(request, id):
+    note = Notes.objects.filter(user=request.user.id).get(pk=id)
+
+    if request.method == 'POST':
+        request_data = request.POST.copy()
+        request_data['user'] = request.user.id
+        form = EditNotesForm(request_data)
+        if form.is_valid():
+            Notes.objects.filter(pk=id).filter(user=request.user.id).update(name=request_data['name'],
+                                                                            text=request_data['text'])
+            note_category = Notes.objects.values_list('category').get(pk=id)[0]
+            return redirect('application:show_notes', category=note_category)
+    else:
+        form = EditNotesForm(instance=note)
+
+    return render(request, 'edit_note.html', {'form': note})
 
 
 """"
