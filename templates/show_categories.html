@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
+<form action="{% url 'application:create_category' %}">
+    <input type="submit" value="Create category" />
+</form>
+
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Vehicle</th>
-        <th scope="col">Image</th>
+        <th scope="col">Name</th>
         <th scope="col">Date Created</th>
         <th scope="col">Action</th>
     </tr>
     </thead>
-    {% for order in orders %}
+    {% for category in categories %}
     <tbody>
     <tr class="table-success">
-        <th scope="row">{{ order.vehicle }}</th>
-        <th><img src="{{ order.image.url }}" alt="" width="30" height="24"></th>
-        <td>{{ order.date_created }}</td>
-        <td><a href="{% url 'show_order' id=order.id %}">Inspect</a></td>
+        <th scope="row">{{ category.name }}</th>
+        <td>{{ category.date_created }}</td>
+        <!-- show notes -->
     </tr>
     {% endfor %}
     </tbody>
@@ -31,7 +33,7 @@
         </li>
         {% else %}
         <li class="page-item">
-            <a class="page-link" href="{% url 'show_orders' page=page_number %}">{{ page_number }}</a>
+            <a class="page-link" href="{% url 'show_categories' page=page_number %}">{{ page_number }}</a>
         </li>
         {% endif %}
         {% endfor %}

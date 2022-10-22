@@ -1,5 +1,8 @@
-from django.shortcuts import render
-from .models import Order, OrderDetail
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.urls import reverse_lazy
+from .models import Categories, User  # , OrderDetail
+from .forms import SignUpForm, EditUserAccountForm, EditCategoriesForm
 from django.core.paginator import Paginator
 
 
@@ -9,20 +12,64 @@ def index(request):
     return render(request, 'index.html')
 
 
-def show_orders(request, page=1):
-    orders_per_page = 1
-    orders = Order.objects.order_by('-date_created').all()
-    paginator = Paginator(orders, orders_per_page)
-    paginated_orders = paginator.get_page(page)
+def sign_up(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('application:index')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/sign_up.html', context={'form': form})
+
+
+def user_account(request):
+    if request.method == 'POST':
+        form = EditUserAccountForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('application:user_account')
+    else:
+        form = EditUserAccountForm(
+            initial={
+                'email': request.user.email,
+                'image': request.user.image
+            }
+        )
+    return render(request, 'user_account.html', context={'form': form})
+
+
+def create_category(request):
+    if request.method == 'POST':
+        request_data = request.POST.copy()
+        request_data['user'] = request.user.id
+        form = EditCategoriesForm(request_data)
+        if form.is_valid():
+            order = form.save()
+            # return redirect('create_order_detail', id=order.id)
+            return redirect('application:show_categories', page=1)
+    else:
+        form = EditCategoriesForm()
+    return render(request, 'create_category.html', context={'form': form})
+
+
+def show_categories(request, page=1):
+    categories_per_page = 10
+    categories = Categories.objects.order_by('name').all()
+    paginator = Paginator(categories, categories_per_page)
+    paginated_categories = paginator.get_page(page)
     context = {
-        'orders': paginated_orders
+        'categories': paginated_categories
     }
-    return render(request, 'show_orders.html', context=context)
+    return render(request, 'show_categories.html', context=context)
 
 
+""""
 def show_order(request, id):
     order_details = OrderDetail.objects.filter(order=id).all()
     context = {
         'order_details': order_details
     }
     return render(request, 'show_order.html', context=context)
+"""
