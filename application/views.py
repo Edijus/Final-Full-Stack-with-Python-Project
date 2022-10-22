@@ -60,14 +60,14 @@ def delete_category(request, id):
 
 
 def edit_category(request, id):
-    category = Categories.objects.get(pk=id)
+    category = Categories.objects.filter(user=request.user.id).get(pk=id)
 
     if request.method == 'POST':
         request_data = request.POST.copy()
         request_data['user'] = request.user.id
         form = EditCategoriesForm(request_data)
         if form.is_valid():
-            Categories.objects.filter(pk=id).update(name=request_data['name'])
+            Categories.objects.filter(pk=id).filter(user=request.user.id).update(name=request_data['name'])
             return redirect('application:show_categories', page=1)
     else:
         form = EditCategoriesForm(instance=category)
