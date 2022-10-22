@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <form action="{% url 'application:create_category' %}">
     <input type="submit" value="Create category" />
@@ -17,7 +18,11 @@
     <tr class="table-success">
         <th scope="row">{{ category.name }}</th>
         <td>{{ category.date_created }}</td>
-        <!-- show notes -->
+        <td>
+            <a href="{% url 'application:delete_category' id=category.id %}">
+                <img src="{% static 'img/delete48.png' %}" alt="Delete" style="cursor: pointer;">
+            </a>
+        </td>
     </tr>
     {% endfor %}
     </tbody>

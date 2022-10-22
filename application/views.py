@@ -54,6 +54,11 @@ def create_category(request):
     return render(request, 'create_category.html', context={'form': form})
 
 
+def delete_category(request, id):
+    Categories.objects.filter(id=id).filter(user=request.user.id).delete()
+    return redirect('application:show_categories', page=1)
+
+
 def show_categories(request, page=1):
     categories_per_page = 10
     categories = Categories.objects.filter(user=request.user.id).order_by('name').all()
