@@ -88,9 +88,10 @@ def show_categories(request, page=1):
 
 def show_notes(request, category):
     notes = Notes.objects.filter(user=request.user.id).filter(category=category).order_by('name').all()
+    category_obj = Categories.objects.get(pk=category)
     context = {
         'notes': notes,
-        'category': category
+        'category': category_obj
     }
     return render(request, 'show_notes.html', context=context)
 
@@ -107,9 +108,10 @@ def create_note(request, category):
             # form.save()
             Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'], user=request_data['user'], category_id=category)
             notes = Notes.objects.filter(user=request.user.id).filter(category=category).order_by('name').all()
+            category_obj = Categories.objects.get(pk=category)
             context = {
                 'notes': notes,
-                'category': category
+                'category': category_obj
             }
             return render(request, 'show_notes.html', context=context)
     else:

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<form action="{% url 'application:create_note' category=category %}">
+<h1>{{ category.name }}</h1><br>
+<form action="{% url 'application:create_note' category=category.id %}">
     <input type="submit" value="Create note" />
 </form>
 
