@@ -1,30 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<form action="{% url 'application:create_category' %}">
-    <input type="submit" value="Create category" />
+<form action="{% url 'application:create_note' category=category %}">
+    <input type="submit" value="Create note" />
 </form>
 
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Name</th>
+        <th scope="col">Note name</th>
         <th scope="col">Date Created</th>
         <th scope="col">Action</th>
     </tr>
     </thead>
-    {% for category in categories %}
+    {% for note in notes %}
     <tbody>
     <tr class="table-success">
-        <th scope="row"><a href="{% url 'application:show_notes' category=category.id %}">{{ category.name }}</a></th>
-        <td>{{ category.date_created }}</td>
+        <th scope="row">{{ note.name }}</th>
+        <td>{{ note.date_created }}</td>
         <td>
-            <a href="{% url 'application:delete_category' id=category.id %}">
-                <img src="{% static 'img/delete48.png' %}" alt="Delete" style="cursor: pointer;">
-            </a>
-            <a href="{% url 'application:edit_category' id=category.id %}">
-                <img src="{% static 'img/edit48.png' %}" alt="Edit" style="cursor: pointer;">
-            </a>
+
         </td>
     </tr>
     {% endfor %}

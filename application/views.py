@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.urls import reverse_lazy
-from .models import Categories, User  # , OrderDetail
-from .forms import SignUpForm, EditUserAccountForm, EditCategoriesForm
+from .models import Categories, Notes  # , OrderDetail
+from .forms import SignUpForm, EditUserAccountForm, EditCategoriesForm, EditNotesForm
 from django.core.paginator import Paginator
 
 
@@ -84,6 +84,39 @@ def show_categories(request, page=1):
         'categories': paginated_categories
     }
     return render(request, 'show_categories.html', context=context)
+
+
+def show_notes(request, category):
+    notes = Notes.objects.filter(user=request.user.id).filter(category=category).order_by('name').all()
+    context = {
+        'notes': notes,
+        'category': category
+    }
+    return render(request, 'show_notes.html', context=context)
+
+
+def create_note(request, category):
+    if request.method == 'POST':
+        request_data = request.POST.copy()
+        request_data['user'] = request.user
+        request_data['category_id'] = category
+        request_data['category'] = category
+        form = EditNotesForm(request_data)
+        form.category = category
+        if form.is_valid():
+            # form.save()
+            Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'], user=request_data['user'], category_id=category)
+            notes = Notes.objects.filter(user=request.user.id).filter(category=category).order_by('name').all()
+            context = {
+                'notes': notes,
+                'category': category
+            }
+            return render(request, 'show_notes.html', context=context)
+    else:
+        form = EditNotesForm()
+
+    form.category = category
+    return render(request, 'create_note.html', context={'form': form})
 
 
 """"
