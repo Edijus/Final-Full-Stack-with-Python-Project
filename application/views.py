@@ -56,7 +56,7 @@ def create_category(request):
 
 def show_categories(request, page=1):
     categories_per_page = 10
-    categories = Categories.objects.order_by('name').all()
+    categories = Categories.objects.filter(user=request.user.id).order_by('name').all()
     paginator = Paginator(categories, categories_per_page)
     paginated_categories = paginator.get_page(page)
     context = {
