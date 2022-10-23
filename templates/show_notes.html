@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1>{{ category.name }}</h1><br>
+
+<label for="categories">Choose a category:</label>
+<select name="categories" id="categories">
+  {% for cat in categories %}
+    {% if cat.id == category.id %}
+      <option value="{{ cat.id }}" selected>{{ cat.name }}</option>
+    {% else %}
+      <option value="{{ cat.id }}">{{ cat.name }}</option>
+    {% endif %}
+  {% endfor %}
+</select> <button onclick="FilterCategoryNotes()">Filter</button>
+
+<br><br><br>
 <form action="{% url 'application:create_note' category=category.id %}">
     <input type="submit" value="Create note" />
 </form>
@@ -15,6 +27,12 @@
 </div>
 
 <script>
+function FilterCategoryNotes() {
+  var cat_selection_element = document.getElementById("categories");
+  var selected_category = cat_selection_element.value;
+  window.location = "/show_notes/category" + selected_category;
+}
+
 function SearchNotes() {
   var table_parent = document.getElementById("table_parent");
 
