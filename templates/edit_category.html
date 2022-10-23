@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="{% url 'application:edit_category' id=form.id %}">
+    {% csrf_token %}
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+    <label for="name">Name: </label>
+    <input type="text" id="name" name="name" value="{{ form.name }}"><br><br>
+    <input type="submit" value="Submit"/>
+</form>
+
+{% endblock %}

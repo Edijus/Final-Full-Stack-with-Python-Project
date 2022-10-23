@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="{% url 'application:create_note' category=form.category %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+    <input type="hidden" name="category_id" value="{{ form.category }}">
+    <label for="name">Note name: </label>
+    <input type="text" id="name" name="name"><br><br>
+    <textarea rows="4" cols="50" name="text" placeholder="Enter note here..."></textarea><br><br>
+    <label for="image">Select image:</label>
+    <input type="file" id="image" name="image" accept="image/*"><br><br>
+    <input type="submit" value="Submit"/>
+</form>
+
+{% endblock %}

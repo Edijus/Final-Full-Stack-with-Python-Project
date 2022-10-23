@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<label for="categories">Choose a category:</label>
+<select name="categories" id="categories">
+  {% for cat in categories %}
+    {% if cat.id == category.id %}
+      <option value="{{ cat.id }}" selected>{{ cat.name }}</option>
+    {% else %}
+      <option value="{{ cat.id }}">{{ cat.name }}</option>
+    {% endif %}
+  {% endfor %}
+</select> <button onclick="FilterCategoryNotes()">Filter</button>
+
+<br><br><br>
+<form action="{% url 'application:create_note' category=category.id %}">
+    <input type="submit" value="Create note" />
+</form>
+<br>
+<input type="text" id="note_search" name="note_search" placeholder="Search...">
+<button onclick="SearchNotes()">Search</button>
+
+<div id="table_parent">
+    <table class="table" id="notes_table">
+    </table>
+</div>
+
+<script>
+function FilterCategoryNotes() {
+  var cat_selection_element = document.getElementById("categories");
+  var selected_category = cat_selection_element.value;
+  window.location = "/show_notes/category" + selected_category;
+}
+
+function SearchNotes() {
+  var table_parent = document.getElementById("table_parent");
+
+  var child = document.getElementById("notes_table");
+  child.parentNode.removeChild(child);
+
+  var tbl = document.createElement('table');
+  tbl.id = "notes_table";
+  tbl.style.width = '100%';
+  tbl.name = 'notes_table';
+  tbl.classList.add("table");
+
+  var tbody = document.createElement('tbody');
+  search_edit = document.getElementById("note_search");
+
+  {% for note in notes %}
+      if ("{{ note.name }}".includes(search_edit.value)) {
+          tr = document.createElement('tr');
+          tr.classList.add("table-success");
+          var td = document.createElement('td');
+          a = document.createElement('a');
+          linkText = document.createTextNode("{{ note.name }}");
+          a.appendChild(linkText);
+          a.title = "Edit";
+          a.href = "{% url 'application:edit_note' id=note.id %}";
+          td.appendChild(a);
+          tr.appendChild(td);
+
+          td = document.createElement('td');
+          td.appendChild(document.createTextNode('{{ note.date_created }}'));
+          tr.appendChild(td);
+
+          td = document.createElement('td');
+          a = document.createElement('a');
+          img = document.createElement('img');
+          img.src = "{% static 'img/delete48.png' %}";
+          img.alt ="Delete note";
+          img.style = "cursor: pointer;";
+          a.appendChild(img);
+          a.title = "Delete";
+          a.href = "{% url 'application:delete_note' id=note.id %}";
+          td.appendChild(a);
+
+          a = document.createElement('a');
+          img = document.createElement('img');
+          img.src = "{% static 'img/Edit48.png' %}";
+          img.alt ="Edit note";
+          img.style = "cursor: pointer;";
+          a.appendChild(img);
+          a.title = "Edit";
+          a.href = "{% url 'application:edit_note' id=note.id %}";
+          td.appendChild(a);
+
+          tr.appendChild(td);
+
+          tbody.appendChild(tr);
+      }
+  {% endfor %}
+
+  tbl.appendChild(tbody);
+  table_parent.appendChild(tbl);
+}
+SearchNotes();
+</script>
+
+{% endblock %}
