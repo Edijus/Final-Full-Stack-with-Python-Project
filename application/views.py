@@ -105,9 +105,13 @@ def create_note(request, category):
         form = EditNotesForm(request_data)
         form.category = category
         if form.is_valid():
-            # form.save()
-            Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'], user=request_data['user'],
-                                        category_id=category, image=request.FILES['image'])
+            if 'image' in request.FILES:
+                Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'],
+                                            user=request_data['user'], category_id=category,
+                                            image=request.FILES['image'])
+            else:
+                Notes.objects.get_or_create(name=request_data['name'], text=request_data['text'],
+                                            user=request_data['user'], category_id=category)
             notes = Notes.objects.filter(user=request.user.id).filter(category=category).order_by('name').all()
             category_obj = Categories.objects.get(pk=category)
             context = {
@@ -130,8 +134,13 @@ def edit_note(request, id):
         request_data['user'] = request.user.id
         form = EditNotesForm(request_data)
         if form.is_valid():
-            Notes.objects.filter(pk=id).filter(user=request.user.id).update(name=request_data['name'],
-                                                                            text=request_data['text'])
+            if 'image' in request.FILES:
+                Notes.objects.filter(pk=id).filter(user=request.user.id).update(name=request_data['name'],
+                                                                                text=request_data['text'],
+                                                                                image=request.FILES['image'])
+            else:
+                Notes.objects.filter(pk=id).filter(user=request.user.id).update(name=request_data['name'],
+                                                                                text=request_data['text'])
             note_category = Notes.objects.values_list('category').get(pk=id)[0]
             return redirect('application:show_notes', category=note_category)
     else:
@@ -140,11 +149,8 @@ def edit_note(request, id):
     return render(request, 'edit_note.html', {'form': note})
 
 
-""""
-def show_order(request, id):
-    order_details = OrderDetail.objects.filter(order=id).all()
-    context = {
-        'order_details': order_details
-    }
-    return render(request, 'show_order.html', context=context)
-"""
+def delete_note(request, id):
+    note_category = Notes.objects.values_list('category').get(pk=id)[0]
+    Notes.objects.filter(id=id).filter(user=request.user.id).delete()
+    return redirect('application:show_notes', category=note_category)
+

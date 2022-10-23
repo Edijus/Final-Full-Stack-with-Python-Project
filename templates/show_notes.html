@@ -20,29 +20,16 @@
         <th scope="row"><a href="{% url 'application:edit_note' id=note.id %}">{{ note.name }}</a></th>
         <td>{{ note.date_created }}</td>
         <td>
-
+            <a href="{% url 'application:delete_note' id=note.id %}">
+                <img src="{% static 'img/delete48.png' %}" alt="Delete" style="cursor: pointer;">
+            </a>
+            <a href="{% url 'application:edit_note' id=note.id %}">
+                <img src="{% static 'img/edit48.png' %}" alt="Edit" style="cursor: pointer;">
+            </a>
         </td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
-
-<nav aria-label="...">
-    {% if orders.has_other_pages %}
-    <ul class="pagination pagination-sm justify-content-end">
-        {% for page_number in orders.paginator.page_range %}
-        {% if orders.number == page_number %}
-        <li class="page-item active">
-            <a class="page-link">{{ page_number }}</a>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="{% url 'show_categories' page=page_number %}">{{ page_number }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-    {% endif %}
-</nav>
 
 {% endblock %}

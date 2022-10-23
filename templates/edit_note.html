@@ -9,8 +9,6 @@
     <label for="name">Note name: </label>
     <input type="text" id="name" name="name" value="{{ form.name }}"><br><br>
     <textarea rows="4" cols="50" name="text" placeholder="Enter note here...">{{ form.text }}</textarea><br><br>
-    <label for="image">Select image:</label>
-    <input type="file" id="image" name="image" accept="image/*">
     {% if form.image %}
         <img src="/media/{{ form.image }}" alt="Note image">
     {% endif %}
