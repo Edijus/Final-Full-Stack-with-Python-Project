@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-tekstas: {{ form.text }}
 <form method="post" action="{% url 'application:edit_note' id=form.id %}" enctype="multipart/form-data">
     {% csrf_token %}
     {% if form.errors %}
@@ -11,7 +10,11 @@ tekstas: {{ form.text }}
     <input type="text" id="name" name="name" value="{{ form.name }}"><br><br>
     <textarea rows="4" cols="50" name="text" placeholder="Enter note here...">{{ form.text }}</textarea><br><br>
     <label for="image">Select image:</label>
-    <input type="file" id="image" name="image" accept="image/*"><br><br>
+    <input type="file" id="image" name="image" accept="image/*">
+    {% if form.image %}
+        <img src="/media/{{ form.image }}" alt="Note image">
+    {% endif %}
+    <br><br>
     <input type="submit" value="Submit"/>
 </form>
 
